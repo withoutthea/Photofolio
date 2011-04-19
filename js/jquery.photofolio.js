@@ -1,3 +1,5 @@
+
+// basic logging wrapper
 (function($){
 	$.log = function(debug) {
 		if (window.console && console.debug) {
@@ -6,7 +8,7 @@
 	};
 })(jQuery);
 
-// fuck IE!
+// IE doesn't support Array.indexOf ... argh ...
 if(!Array.indexOf){
     Array.prototype.indexOf = function(obj){
         for(var i=0; i<this.length; i++){
@@ -22,7 +24,7 @@ if(!Array.indexOf){
 
 (function($) {
 
-    $.photofolio = { version : '0.1a' }
+    $.photofolio = { version : '0.2' }
 
     $.fn.photofolio = function(options)
     {
@@ -31,9 +33,25 @@ if(!Array.indexOf){
             thumbs = Array();
 
         $.photofolio.defaults = {
+            // @TODO -> All these here for the growth of the project ... not implement in Photofolio itself yet!
+            /*'thumbnails' => true,
+            'showNav' => true,
+            'navPosition' => 'top-center',
+            'slideshow' => false,
+            'timer' => '5',
+            'lightbox' => false,
+            'thumbHeight' => 'auto',
+            'thumbWidth' => 'auto',
+            'imageHeight' => 'auto',
+            'imageWidth' => 'auto',
+            'containerHeight' => 'auto',
+            'containerWidth' => 'auto',*/
+            
             containerClass : 'photofolio-container',
             navPosition : 'top-center',
-            thumbnailPosition : 'below'
+            thumbnailPosition : 'below',
+            leftNavImage : 'images/leftNav.png',
+            rightNavImage : 'images/rightNav.png'
         }
 
         $.photofolio.current = null;
@@ -54,24 +72,38 @@ if(!Array.indexOf){
             // if nav belongs on top or left or right
             if (opts.navPosition.indexOf('bottom') == -1)
                 markup += '<div class="photofolio-nav"></div>';
+            
+            // if thumbnails are 'beside'
+            if (opts.thumbnailPosition == 'beside') {
+                markup += '<div class="photofolio-thumbnails" style="float: left;"><ul class="photofolio-thumbnails-list"></ul></div>';
+            }
 
             // step two
-            markup += '<div class="photofolio-image-wrapper"></div>';
+            markup += '<div class="photofolio-image-wrapper">' +
+                        '<div class="photofolio-image-wrapper-nav photofolio-image-wrapper-nav-left"><img src="' + opts.leftNavImage + '" alt="Previous Image" class="photofolio-image-wrapper-nav-left-image" style="display: none;" /></div>' +
+                        '<div class="photofolio-image-wrapper-nav photofolio-image-wrapper-nav-right"><img src="' + opts.rightNavImage + '" alt="Next Image" class="photofolio-image-wrapper-nav-right-image" style="display: none;" /></div>' +
+                        '</div>';
 
             // step three
             markup += '<div class="photofolio-image-caption-wrapper"><span class="photofolio-caption"></span></div>';
 
-            // wrap thumbnail ul in a div for easy positioning
-            markup += '<div class="photofolio-thumbnails"><ul class="photofolio-thumbnails-list"></ul></div>';
+            // if thumbnails are 'below'
+            if (opts.thumbnailPosition != 'beside')
+                markup += '<div class="photofolio-thumbnails"><ul class="photofolio-thumbnails-list"></ul></div>';
 
             // clean up step one
             markup += '</div>'
 
             var container = $(markup).insertBefore(this);
-
-            // if they belong on the left side, float it over there
-            if (opts.thumbnailsPositon == 'beside')
-                $('.photofolio-thumbnails').css('float', 'left');
+            
+            // init prev/next images
+            // @TODO -> Implement first/last detection to hide prev/next images
+            $('.photofolio-image-wrapper-nav').hover(
+                function() { $(this).children('img').show(); },
+                function() { $(this).children('img').hide(); }
+            );
+            $('.photofolio-image-wrapper-nav-left-image').click(function() { $.photofolio.prev(); });
+            $('.photofolio-image-wrapper-nav-right-image').click(function() { $.photofolio.next(); });
 
             // markup is done, load our images
             $(this).children('li').each($.photofolio.loadImages);
@@ -160,7 +192,7 @@ if(!Array.indexOf){
         $.photofolio.next = function()
         {
             // get the next object
-            $next = $('.photofolio-active').next(); //.nextAll('.photofolio-image').eq(0);
+            $next = $('.photofolio-active-thumb').next();
 
             // if there's nothing (end of list), do nothing
             if ($next.length <= 0) return;
@@ -172,7 +204,7 @@ if(!Array.indexOf){
         $.photofolio.prev = function()
         {
             // get the prev object
-            $prev = $('.photofolio-active').prev();
+            $prev = $('.photofolio-active-thumb').prev();
 
             // if there's nothing (beginning of list), do nothing
             if ($prev.length <= 0) return;

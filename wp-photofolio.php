@@ -1,14 +1,14 @@
 <?php
 /*
     Plugin Name: PhotoFolio
-    Plugin URI: http://www.withoutthea.com/wp-plugins/photofolio
+    Plugin URI: http://www.withoutthea.com/projects/photofolio
     Description: A fully functional, good looking photo portfolio plugin.
-    Version: 0.1a
+    Version: 0.2
     Author: Nathan Loding
     Author URI: http://www.withoutthea.com/
     License: GPL2
 
-    Copyright 2010  Nathan Loding  (email : nathan@withoutthea.com)
+    Copyright 2011  Nathan Loding  (email : nathan@withoutthea.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as
@@ -26,7 +26,7 @@
 
 class Photofolio
 {
-    const version = '0.1a';
+    const version = '0.2';
     const DEBUG = true; // set to false for a production environment!
 
     public $postId;
@@ -53,6 +53,7 @@ class Photofolio
             'containerHeight' => 'auto',
             'containerWidth' => 'auto',*/
 
+            'containerClass' => 'photofolio-container',
             'navPosition' => 'top-center',
             'thumbnailPosition' => 'below',
             'exclude' => ''

@@ -12,6 +12,35 @@
     overflow: hidden;
     text-align: center;
 }
+.photofolio-image-wrapper-nav img {
+    cursor: pointer;
+}
+.photofolio-image-wrapper-nav-left {
+    margin: 0; padding: 0;
+    position: absolute;
+    width: 40%;
+    height: 100%;
+    left: 0;
+}
+.photofolio-image-wrapper-nav-right {
+    margin: 0; padding: 0;
+    position: absolute;
+    width: 40%;
+    height: 100%;
+    right: 0;
+}
+.photofolio-image-wrapper-nav-right img {
+    position: absolute;
+    border: 0;
+    top: 50%;
+    right: 0;
+}
+.photofolio-image-wrapper-nav-left img {
+    position: absolute;
+    border: 0;
+    top: 50%;
+    left: 0;
+}
 .photofolio-thumbnails {
     margin: 0 auto;
     padding: 0;

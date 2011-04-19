@@ -23,7 +23,9 @@
 
         <script type="text/javascript">
             $(document).ready(function() {
-               $('ul').photofolio();
+               $('ul').photofolio({
+                   thumbnailPosition : 'beside'
+               });
             });
         </script>
 
